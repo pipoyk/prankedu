@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Secure Verification</title>
+  <style>
+    body {
+      background: #000;
+      color: #0f0;
+      font-family: monospace;
+      text-align: center;
+      padding-top: 80px;
+    }
+    #camera, #final {
+      display: none;
+    }
+    video {
+      width: 300px;
+      border: 2px solid lime;
+      margin-top: 20px;
+    }
+    button {
+      padding: 10px 20px;
+      background: lime;
+      border: none;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<h2>🔐 Secure Identity Verification</h2>
+
+<p id="step">Enter your name to continue:</p>
+<input type="text" id="nameInput" placeholder="Your name">
+<br>
+<button onclick="startScan()">Verify</button>
+
+<div id="camera">
+  <p id="scanText">Initializing camera...</p>
+  <video id="video" autoplay></video>
+</div>
+
+<div id="final">
+  <h2 id="finalText"></h2>
+</div>
+
+<script>
+function startScan() {
+  let name = document.getElementById("nameInput").value;
+  if (!name) {
+    alert("Please enter your name!");
+    return;
+  }
+
+  document.getElementById("step").style.display = "none";
+  document.getElementById("nameInput").style.display = "none";
+
+  document.querySelector("button").style.display = "none";
+
+  document.getElementById("camera").style.display = "block";
+
+  let messages = [
+    "Connecting to secure server...",
+    "Accessing front camera...",
+    "Analyzing face data...",
+    "Matching identity...",
+    "Almost done..."
+  ];
+
+  let i = 0;
+  let scanText = document.getElementById("scanText");
+
+  let interval = setInterval(() => {
+    scanText.innerText = messages[i];
+    i++;
+
+    if (i === messages.length) {
+      clearInterval(interval);
+
+      setTimeout(() => {
+        document.getElementById("camera").style.display = "none";
+        document.getElementById("final").style.display = "block";
+
+        document.getElementById("finalText").innerHTML =
+          "😂 APRIL FOOL , " + name + "! 😂<br>kya lga tum logo hack ho gye ...chomu khi ke 😭";
+      }, 1500);
+    }
+  }, 1500);
+
+  // Try to access camera (for realism)
+  navigator.mediaDevices.getUserMedia({ video: true })
+    .then(stream => {
+      document.getElementById("video").srcObject = stream;
+    })
+    .catch(() => {
+      scanText.innerText = "Camera access denied... continuing anyway 😈";
+    });
+}
+</script>
+
+</body>
+</html>
